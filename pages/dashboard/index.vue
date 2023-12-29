@@ -1,6 +1,9 @@
 <template>
   <div>
     <NuxtLayout>
+      <h1 class="scroll-m-20 text-2xl font-semibold tracking-tight mb-4">
+        Overview
+      </h1>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
         <DashboardCard title="Total Jabatan" value="999">
           <template #icon>
