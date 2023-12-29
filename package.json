@@ -21,6 +21,7 @@
     "vue-tsc": "^1.0.24"
   },
   "dependencies": {
+    "@heroicons/vue": "^2.1.1",
     "@nuxtjs/kinde": "^0.1.4",
     "@prisma/client": "^5.4.1",
     "@trpc/client": "^10.40.0",
