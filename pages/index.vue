@@ -8,7 +8,5 @@
 
 <script setup lang="ts">
 // will redirect successfully with the 'external' parameter set to 'true'
-await navigateTo({
-  path: '/api/login'
-})
+await navigateTo('/api/login', { external: true })
 </script>
