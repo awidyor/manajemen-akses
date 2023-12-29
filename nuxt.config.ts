@@ -4,12 +4,20 @@ export default defineNuxtConfig({
     '@nuxtjs/kinde',
     '@nuxtjs/tailwindcss'
   ],
+
   build: {
     transpile: [
       'trpc-nuxt'
     ]
   },
+
   typescript: {
     shim: false
+  },
+
+  devtools: {
+    timeline: {
+      enabled: true
+    }
   }
 })
