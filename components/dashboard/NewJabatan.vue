@@ -41,7 +41,7 @@
 
 <script setup type="ts">
 import { getQueryKey } from 'trpc-nuxt/client'
-import { useNuxtApp } from '#app'
+import { initFlowbite } from 'flowbite'
 
 const { $client } = useNuxtApp()
 const previousJabatan = ref([])
@@ -75,6 +75,7 @@ const addJabatan = async () => {
     await refreshNuxtData(queryKey)
     document.querySelector('[data-modal-toggle="addJabatanModal"]').click()
     jabatan.value = ''
+    await initFlowbite()
   } catch (error) {
     // Restore the cached value
     jabatans.value = previousJabatan.value

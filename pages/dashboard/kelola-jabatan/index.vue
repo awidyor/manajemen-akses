@@ -13,6 +13,7 @@
 </template>
 
 <script setup type="ts">
+import { initFlowbite } from 'flowbite'
 const { $client } = useNuxtApp()
 
 const { data } = await $client.jabatan.getAll.useQuery()
