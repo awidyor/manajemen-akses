@@ -2,65 +2,134 @@
   <div>
     <NuxtLayout>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-        <div
-          class="border-2 border-dashed border-gray-300 rounded-lg dark:border-gray-600 h-32 md:h-64"
-        />
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-32 md:h-64"
-        />
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-32 md:h-64"
-        />
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-32 md:h-64"
-        />
+        <DashboardCard title="Total Jabatan" value="999">
+          <template #icon>
+            <ChartPieIcon class="h-4 w-4 text-muted-foreground" />
+          </template>
+        </DashboardCard>
+        <DashboardCard title="Total User" value="999">
+          <template #icon>
+            <ChartBarIcon class="h-4 w-4 text-muted-foreground" />
+          </template>
+        </DashboardCard>
+        <DashboardCard title="Total Masuk" value="999">
+          <template #icon>
+            <ArrowDownTrayIcon class="h-4 w-4 text-muted-foreground" />
+          </template>
+        </DashboardCard>
+        <DashboardCard title="Total Keluar" value="999">
+          <template #icon>
+            <ArrowUpTrayIcon class="h-4 w-4 text-muted-foreground" />
+          </template>
+        </DashboardCard>
       </div>
-      <div
-        class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-96 mb-4"
-      />
       <div class="grid grid-cols-2 gap-4 mb-4">
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72"
+        <DashboardChart
+          title="Chart Bulanan"
+          chart-id="ChatBulanan"
+          :options="chartOptions"
+          :data="chartDataBulanan"
         />
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72"
-        />
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72"
-        />
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72"
-        />
-      </div>
-      <div
-        class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-96 mb-4"
-      />
-      <div class="grid grid-cols-2 gap-4">
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72"
-        />
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72"
-        />
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72"
-        />
-        <div
-          class="border-2 border-dashed rounded-lg border-gray-300 dark:border-gray-600 h-48 md:h-72"
+        <DashboardChart
+          title="Chart Mingguan"
+          chart-id="ChatMingguan"
+          :options="chartOptions"
+          :data="chartDataMingguan"
         />
       </div>
-      <NuxtLink to="/api/logout" external>
-        Sign out
-      </NuxtLink>
     </NuxtLayout>
   </div>
 </template>
 
 <script setup lang="ts">
-const route = useRoute()
+import { ChartPieIcon, ChartBarIcon, ArrowDownTrayIcon, ArrowUpTrayIcon } from '@heroicons/vue/24/solid'
+import { ref } from 'vue'
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
 
-// When accessing /posts/1, route.params.id will be 1
-console.log(route.params)
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+
+/**
+ * Calculates the previous 6 months from the current month and returns an array of month names.
+ *
+ * @returns {string[]} Array of month names.
+ */
+const monthNow = new Date().getMonth()
+const monthBefore = Array.from({ length: 6 }, (_, i) => monthNow - i).reverse()
+const listmonthBefore = monthBefore.map((month) => {
+  const date = new Date()
+  date.setMonth(month)
+  return date.toLocaleString('default', { month: 'long' })
+})
+
+type ColorKey = 'faceId' | 'fingerprint' | 'tapCard';
+
+interface Color {
+  background: string;
+  border: string;
+}
+
+const COLORS: Record<ColorKey, Color> & Record<string, Color> = {
+  faceId: {
+    background: 'rgba(255, 99, 132, 0.2)',
+    border: 'rgba(255, 99, 132, 1)'
+  },
+  fingerprint: {
+    background: 'rgba(54, 162, 235, 0.2)',
+    border: 'rgba(54, 162, 235, 1)'
+  },
+  tapCard: {
+    background: 'rgba(255, 206, 86, 0.2)',
+    border: 'rgba(255, 206, 86, 1)'
+  }
+}
+
+interface Dataset {
+  label: string;
+  data: number[];
+}
+
+const generateChartData = (labels: string[], datasets: Dataset[]) => {
+  return {
+    labels,
+    datasets: datasets.map((dataset) => {
+      /**
+       * Formats a label by converting it to camel case.
+       *
+       * @param {string} label - The label to be formatted.
+       * @returns {string} The formatted label in camel case.
+       */
+      function formatLabel (label: string): string {
+        return label.split(' ')
+          .map((word, index) => index === 0 ? word.toLowerCase() : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+          .join('')
+      }
+      const key = formatLabel(dataset.label)
+
+      return {
+        ...dataset,
+        backgroundColor: COLORS[key].background,
+        borderColor: COLORS[key].border,
+        borderWidth: 1
+      }
+    })
+  }
+}
+
+const chartDataBulanan = ref(generateChartData(listmonthBefore, [
+  { label: 'Face ID', data: [150, 120, 100, 80, 90, 110] },
+  { label: 'Fingerprint', data: [80, 90, 110, 130, 140, 160] },
+  { label: 'Tap Card', data: [100, 120, 150, 130, 110, 90] }
+]))
+
+const chartDataMingguan = ref(generateChartData(['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'], [
+  { label: 'Face ID', data: [150, 120, 100, 80] },
+  { label: 'Fingerprint', data: [80, 90, 110, 130] },
+  { label: 'Tap Card', data: [100, 120, 150, 130] }
+]))
+
+const chartOptions = ref({
+  responsive: true
+})
 
 useHead({
   title: 'Dashboard'
