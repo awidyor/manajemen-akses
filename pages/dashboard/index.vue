@@ -1,28 +1,28 @@
 <template>
   <div>
     <NuxtLayout>
-      <h1 class="scroll-m-20 text-2xl font-semibold tracking-tight mb-4">
+      <h1 class="mb-4 text-2xl font-semibold tracking-tight scroll-m-20">
         Overview
       </h1>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-        <DashboardCard title="Total Jabatan" value="999">
+      <div class="grid grid-cols-1 gap-4 mb-4 sm:grid-cols-2 lg:grid-cols-4">
+        <DashboardCard title="Total Jabatan" :value="999">
           <template #icon>
-            <ChartPieIcon class="h-4 w-4 text-muted-foreground" />
+            <ChartPieIcon class="w-4 h-4 text-muted-foreground" />
           </template>
         </DashboardCard>
-        <DashboardCard title="Total User" value="999">
+        <DashboardCard title="Total User" :value="999">
           <template #icon>
-            <ChartBarIcon class="h-4 w-4 text-muted-foreground" />
+            <ChartBarIcon class="w-4 h-4 text-muted-foreground" />
           </template>
         </DashboardCard>
-        <DashboardCard title="Total Masuk" value="999">
+        <DashboardCard title="Total Masuk" :value="999">
           <template #icon>
-            <ArrowDownTrayIcon class="h-4 w-4 text-muted-foreground" />
+            <ArrowDownTrayIcon class="w-4 h-4 text-muted-foreground" />
           </template>
         </DashboardCard>
-        <DashboardCard title="Total Keluar" value="999">
+        <DashboardCard title="Total Keluar" :value="999">
           <template #icon>
-            <ArrowUpTrayIcon class="h-4 w-4 text-muted-foreground" />
+            <ArrowUpTrayIcon class="w-4 h-4 text-muted-foreground" />
           </template>
         </DashboardCard>
       </div>

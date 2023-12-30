@@ -1,7 +1,7 @@
 <template>
-  <div class="rounded-xl border bg-white text-card-foreground shadow">
-    <div class="p-6 flex flex-row items-center justify-between space-y-0 pb-2">
-      <h3 class="tracking-tight text-sm font-medium">
+  <div class="bg-white border shadow rounded-xl text-card-foreground">
+    <div class="flex flex-row items-center justify-between p-6 pb-2 space-y-0">
+      <h3 class="text-sm font-medium tracking-tight">
         {{ title }}
       </h3>
     </div>
@@ -18,12 +18,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Bar } from 'vue-chartjs'
+import { type ChartData } from 'chart.js'
 
 const props = defineProps<{
   title: String,
   chartId: String,
   options: Object,
-  data: Object
+  data: ChartData<'bar'>
 }>()
 
 const options = ref(props.options)
