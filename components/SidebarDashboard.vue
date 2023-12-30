@@ -34,7 +34,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { initFlowbite } from 'flowbite'
-import { ChartPieIcon, ChartBarIcon, UsersIcon, FingerPrintIcon, DocumentIcon } from '@heroicons/vue/24/solid'
+import { ChartPieIcon, ChartBarIcon, UsersIcon, DocumentIcon } from '@heroicons/vue/24/solid'
 
 // initialize components based on data attribute selectors
 onMounted(() => {
