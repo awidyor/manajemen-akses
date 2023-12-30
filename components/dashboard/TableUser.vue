@@ -286,6 +286,12 @@ const updateUser = async (id, payload) => {
     // Restore the cached value
     users.value = previousUser.value
   } finally {
+    payload.target.fingerPrintId.value = ''
+    payload.target.tapCardId.value = ''
+    payload.target.faceId.value = ''
+    payload.target.nama.value = ''
+    payload.target.jabatanId.value = ''
+    payload.target.jenisKelamin.value = ''
     errorMessage.value = ''
   }
 }
