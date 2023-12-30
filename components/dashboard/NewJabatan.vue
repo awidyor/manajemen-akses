@@ -29,10 +29,13 @@
             placeholder="Tulis nama jabatan"
             required
           >
-          <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+          <button :disabled="isLoading" type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
             <PlusIcon class="w-6 h-6 mr-1 -ml-1" />
             Simpan
           </button>
+          <p v-if="errorMessage" class="mt-2 text-sm text-red-500">
+            {{ errorMessage }}
+          </p>
         </form>
       </div>
     </div>
@@ -46,6 +49,8 @@ import { PlusIcon, XMarkIcon } from '@heroicons/vue/24/solid'
 
 const { $client } = useNuxtApp()
 const previousJabatan = ref([])
+const isLoading = ref(false)
+const errorMessage = ref('')
 
 const queryKey = getQueryKey($client.jabatan.getAll)
 
@@ -60,6 +65,14 @@ onMounted(() => {
 const jabatan = ref('')
 
 const addJabatan = async () => {
+  // Form validation
+  if (!jabatan.value) {
+    errorMessage.value = 'Please enter a job position.'
+    return
+  }
+
+  isLoading.value = true
+
   // Store the previously cached value to restore if mutation fails.
   previousJabatan.value = jabatans.value
 
@@ -76,10 +89,14 @@ const addJabatan = async () => {
     await refreshNuxtData(queryKey)
     document.querySelector('[data-modal-toggle="addJabatanModal"]').click()
     jabatan.value = ''
+    errorMessage.value = ''
     await initFlowbite()
   } catch (error) {
     // Restore the cached value
     jabatans.value = previousJabatan.value
+    errorMessage.value = 'Gagal menambahkan jabatan. Silahkan coba lagi.'
+  } finally {
+    isLoading.value = false
   }
 }
 </script>
