@@ -5,35 +5,35 @@
         Overview
       </h1>
       <div class="grid grid-cols-1 gap-4 mb-4 sm:grid-cols-2 lg:grid-cols-4">
-        <DashboardCard title="Total Jabatan" :value="999">
+        <DashboardCardOverview title="Total Jabatan" :value="999">
           <template #icon>
             <ChartPieIcon class="w-4 h-4 text-muted-foreground" />
           </template>
-        </DashboardCard>
-        <DashboardCard title="Total User" :value="999">
+        </DashboardCardOverview>
+        <DashboardCardOverview title="Total User" :value="999">
           <template #icon>
             <ChartBarIcon class="w-4 h-4 text-muted-foreground" />
           </template>
-        </DashboardCard>
-        <DashboardCard title="Total Masuk" :value="999">
+        </DashboardCardOverview>
+        <DashboardCardOverview title="Total Masuk" :value="999">
           <template #icon>
             <ArrowDownTrayIcon class="w-4 h-4 text-muted-foreground" />
           </template>
-        </DashboardCard>
-        <DashboardCard title="Total Keluar" :value="999">
+        </DashboardCardOverview>
+        <DashboardCardOverview title="Total Keluar" :value="999">
           <template #icon>
             <ArrowUpTrayIcon class="w-4 h-4 text-muted-foreground" />
           </template>
-        </DashboardCard>
+        </DashboardCardOverview>
       </div>
       <div class="grid grid-cols-2 gap-4 mb-4">
-        <DashboardChart
+        <DashboardChartOverview
           title="Chart Bulanan"
           chart-id="ChatBulanan"
           :options="chartOptions"
           :data="chartDataBulanan"
         />
-        <DashboardChart
+        <DashboardChartOverview
           title="Chart Mingguan"
           chart-id="ChatMingguan"
           :options="chartOptions"
