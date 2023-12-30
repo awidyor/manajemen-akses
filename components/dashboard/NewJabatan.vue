@@ -22,7 +22,6 @@
           <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
           <input
             id="name"
-            v-model="jabatan"
             type="text"
             name="name"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-4"
@@ -42,7 +41,7 @@
   </div>
 </template>
 
-<script setup type="ts">
+<script setup>
 import { getQueryKey } from 'trpc-nuxt/client'
 import { initFlowbite } from 'flowbite'
 import { PlusIcon, XMarkIcon } from '@heroicons/vue/24/solid'
@@ -62,11 +61,9 @@ onMounted(() => {
   initFlowbite()
 })
 
-const jabatan = ref('')
-
-const addJabatan = async () => {
+const addJabatan = async (payload) => {
   // Form validation
-  if (!jabatan.value) {
+  if (!payload.target.name.value) {
     errorMessage.value = 'Please enter a job position.'
     return
   }
@@ -79,23 +76,23 @@ const addJabatan = async () => {
   // Optimistically update the cache
   jabatans.value.push({
     id: jabatans.value.length + 1,
-    nama: jabatan.value
+    nama: payload.target.name.value
   })
 
   try {
     await $client.jabatan.create.mutate({
-      nama: jabatan.value
+      nama: payload.target.name.value
     })
     await refreshNuxtData(queryKey)
     document.querySelector('[data-modal-toggle="addJabatanModal"]').click()
-    jabatan.value = ''
     errorMessage.value = ''
-    await initFlowbite()
+    initFlowbite()
   } catch (error) {
     // Restore the cached value
     jabatans.value = previousJabatan.value
     errorMessage.value = 'Gagal menambahkan jabatan. Silahkan coba lagi.'
   } finally {
+    payload.target.name.value = ''
     isLoading.value = false
   }
 }

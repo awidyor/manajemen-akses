@@ -114,7 +114,7 @@
   </div>
 </template>
 
-<script setup type="ts">
+<script setup>
 import { getQueryKey } from 'trpc-nuxt/client'
 import { initFlowbite } from 'flowbite'
 import { PlusIcon, XMarkIcon } from '@heroicons/vue/24/solid'
@@ -172,6 +172,12 @@ const addUser = async (payload) => {
     errorMessage.value = error.message
     users.value = previousUser.value
   } finally {
+    payload.target.fingerPrintId.value = ''
+    payload.target.tapCardId.value = ''
+    payload.target.faceId.value = ''
+    payload.target.nama.value = ''
+    payload.target.jabatanId.value = ''
+    payload.target.jenisKelamin.value = ''
     isLoading.value = false
   }
 }
