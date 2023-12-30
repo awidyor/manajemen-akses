@@ -5,22 +5,22 @@
         Overview
       </h1>
       <div class="grid grid-cols-1 gap-4 mb-4 sm:grid-cols-2 lg:grid-cols-4">
-        <DashboardCardOverview title="Total Jabatan" :value="999">
+        <DashboardCardOverview title="Total Jabatan" :value="statsData.jabatan">
           <template #icon>
             <ChartPieIcon class="w-4 h-4 text-muted-foreground" />
           </template>
         </DashboardCardOverview>
-        <DashboardCardOverview title="Total User" :value="999">
+        <DashboardCardOverview title="Total User" :value="statsData.user">
           <template #icon>
             <ChartBarIcon class="w-4 h-4 text-muted-foreground" />
           </template>
         </DashboardCardOverview>
-        <DashboardCardOverview title="Total Masuk" :value="999">
+        <DashboardCardOverview title="Total Masuk" :value="statsData.totalIn">
           <template #icon>
             <ArrowDownTrayIcon class="w-4 h-4 text-muted-foreground" />
           </template>
         </DashboardCardOverview>
-        <DashboardCardOverview title="Total Keluar" :value="999">
+        <DashboardCardOverview title="Total Keluar" :value="statsData.totalOut">
           <template #icon>
             <ArrowUpTrayIcon class="w-4 h-4 text-muted-foreground" />
           </template>
@@ -28,50 +28,27 @@
       </div>
       <div class="grid grid-cols-2 gap-4 mb-4">
         <DashboardChartOverview
-          title="Chart Bulanan"
+          :title="`Chart Bulanan ${currentYear}`"
           chart-id="ChatBulanan"
           :options="chartOptions"
           :data="chartDataBulanan"
-        />
-        <DashboardChartOverview
-          title="Chart Mingguan"
-          chart-id="ChatMingguan"
-          :options="chartOptions"
-          :data="chartDataMingguan"
         />
       </div>
     </NuxtLayout>
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ChartPieIcon, ChartBarIcon, ArrowDownTrayIcon, ArrowUpTrayIcon } from '@heroicons/vue/24/solid'
 import { ref } from 'vue'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
 
+const { $client } = useNuxtApp()
+const { data: statsData } = await $client.stats.getAll.useQuery()
+
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
-/**
- * Calculates the previous 6 months from the current month and returns an array of month names.
- *
- * @returns {string[]} Array of month names.
- */
-const monthNow = new Date().getMonth()
-const monthBefore = Array.from({ length: 6 }, (_, i) => monthNow - i).reverse()
-const listmonthBefore = monthBefore.map((month) => {
-  const date = new Date()
-  date.setMonth(month)
-  return date.toLocaleString('default', { month: 'long' })
-})
-
-type ColorKey = 'faceId' | 'fingerprint' | 'tapCard';
-
-interface Color {
-  background: string;
-  border: string;
-}
-
-const COLORS: Record<ColorKey, Color> & Record<string, Color> = {
+const COLORS = {
   faceId: {
     background: 'rgba(255, 99, 132, 0.2)',
     border: 'rgba(255, 99, 132, 1)'
@@ -86,27 +63,11 @@ const COLORS: Record<ColorKey, Color> & Record<string, Color> = {
   }
 }
 
-interface Dataset {
-  label: string;
-  data: number[];
-}
-
-const generateChartData = (labels: string[], datasets: Dataset[]) => {
+const generateChartData = (labels, datasets) => {
   return {
     labels,
     datasets: datasets.map((dataset) => {
-      /**
-       * Formats a label by converting it to camel case.
-       *
-       * @param {string} label - The label to be formatted.
-       * @returns {string} The formatted label in camel case.
-       */
-      function formatLabel (label: string): string {
-        return label.split(' ')
-          .map((word, index) => index === 0 ? word.toLowerCase() : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-          .join('')
-      }
-      const key = formatLabel(dataset.label)
+      const key = dataset.label
 
       return {
         ...dataset,
@@ -118,17 +79,13 @@ const generateChartData = (labels: string[], datasets: Dataset[]) => {
   }
 }
 
-const chartDataBulanan = ref(generateChartData(listmonthBefore, [
-  { label: 'Face ID', data: [150, 120, 100, 80, 90, 110] },
-  { label: 'Fingerprint', data: [80, 90, 110, 130, 140, 160] },
-  { label: 'Tap Card', data: [100, 120, 150, 130, 110, 90] }
-]))
+let chartDataBulanan = ref(null)
+let currentYear = ref(null)
 
-const chartDataMingguan = ref(generateChartData(['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4'], [
-  { label: 'Face ID', data: [150, 120, 100, 80] },
-  { label: 'Fingerprint', data: [80, 90, 110, 130] },
-  { label: 'Tap Card', data: [100, 120, 150, 130] }
-]))
+if (statsData.value) {
+  currentYear = ref(statsData.value.charts.currentYear)
+  chartDataBulanan = ref(generateChartData(statsData.value.charts.listMonthBefore, statsData.value.charts.listData ? statsData.value.charts.listData : []))
+}
 
 const chartOptions = ref({
   responsive: true

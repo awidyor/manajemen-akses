@@ -1,4 +1,5 @@
 import { router } from '../trpc'
+import { statsRouter } from './stats'
 import { jabatanRouter } from './jabatan'
 import { reportingRouter } from './reporting'
 import { userRouter } from './user'
@@ -6,7 +7,8 @@ import { userRouter } from './user'
 export const appRouter = router({
   jabatan: jabatanRouter,
   user: userRouter,
-  reporting: reportingRouter
+  reporting: reportingRouter,
+  stats: statsRouter
 })
 
 // export type definition of API
