@@ -1,10 +1,10 @@
 <template>
   <aside
     id="drawer-navigation"
-    class="fixed top-0 left-0 z-40 w-64 h-screen pt-14 transition-transform -translate-x-full bg-white border-r border-gray-200 md:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
+    class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full bg-white border-r border-gray-200 pt-14 md:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
     aria-label="Sidenav"
   >
-    <div class="overflow-y-auto py-5 px-3 h-full bg-white dark:bg-gray-800">
+    <div class="h-full px-3 py-5 overflow-y-auto bg-white dark:bg-gray-800">
       <ul class="space-y-2">
         <SidebarLink to="/dashboard" label="Overview">
           <template #icon>
@@ -19,11 +19,6 @@
         <SidebarLink to="/dashboard/kelola-user" label="Kelola User">
           <template #icon>
             <UsersIcon :class="iconClasses('/dashboard/kelola-user')" />
-          </template>
-        </SidebarLink>
-        <SidebarLink to="/dashboard/kelola-akses" label="Kelola Akses">
-          <template #icon>
-            <FingerPrintIcon :class="iconClasses('/dashboard/kelola-akses')" />
           </template>
         </SidebarLink>
         <SidebarLink to="/dashboard/laporan" label="Laporan">
