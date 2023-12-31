@@ -12,6 +12,7 @@ export const statsRouter = router({
         // Get the last 6 months
         const lastSixMonths = Array.from({ length: 6 }, (_, i) => {
           const date = new Date()
+          date.setDate(1) // set the day to the 1st
           date.setMonth(date.getMonth() - i)
           return date.toLocaleString('default', { month: 'long' })
         }).reverse()
@@ -36,7 +37,7 @@ export const statsRouter = router({
             }
           }
 
-          if (dateKeluar && dateKeluar.getFullYear() === currentYear) {
+          if (dateKeluar && item.metodeKeluar && dateKeluar.getFullYear() === currentYear) {
             const monthKeluar = dateKeluar.toLocaleString('default', { month: 'long' })
 
             if (lastSixMonths.includes(monthKeluar)) {
@@ -62,10 +63,11 @@ export const statsRouter = router({
               }
             }
           }),
-          charts: {
+          chartsMonthly: {
             currentYear,
             listMonthBefore: lastSixMonths,
             listData: Object.entries(result).map(([key, value]) => ({ label: key, data: value }))
+          },
           }
         }
       } catch (error) {

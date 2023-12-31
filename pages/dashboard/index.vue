@@ -83,8 +83,8 @@ let chartDataBulanan = ref(null)
 let currentYear = ref(null)
 
 if (statsData.value) {
-  currentYear = ref(statsData.value.charts.currentYear)
-  chartDataBulanan = ref(generateChartData(statsData.value.charts.listMonthBefore, statsData.value.charts.listData ? statsData.value.charts.listData : []))
+  currentYear = ref(statsData.value.chartsMonthly.currentYear)
+  chartDataBulanan = ref(generateChartData(statsData.value.chartsMonthly.listMonthBefore, statsData.value.chartsMonthly.listData ? statsData.value.chartsMonthly.listData : []))
 }
 
 const chartOptions = ref({
