@@ -52,6 +52,43 @@ export const statsRouter = router({
         delete result.TapCard
         delete result.fingerPrintId
 
+        // list minggu
+        const listMinggu = ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4']
+
+        // get current month
+        const currentMonth = new Date().getMonth()
+        const currentMonthName = new Date().toLocaleString('default', { month: 'long' })
+
+        const resultWeekly = Object.fromEntries(methods.map(method => [method, Array(4).fill(0)]))
+
+        for (const item of data) {
+          const dateMasuk = new Date(item.waktuMasuk)
+          const dateKeluar = item.waktuKeluar ? new Date(item.waktuKeluar) : null
+
+          // Only consider data from the current year
+          if (dateMasuk.getMonth() === currentMonth) {
+            const weekMasuk = dateMasuk.getDate() <= 7 ? listMinggu[0] : dateMasuk.getDate() <= 14 ? listMinggu[1] : dateMasuk.getDate() <= 21 ? listMinggu[2] : listMinggu[3]
+
+            if (listMinggu.includes(weekMasuk)) {
+              resultWeekly[item.metodeMasuk][listMinggu.indexOf(weekMasuk)]++
+            }
+          }
+
+          if (dateKeluar && item.metodeKeluar && dateKeluar.getMonth() === currentMonth) {
+            const weekKeluar = dateKeluar.getDate() <= 7 ? listMinggu[0] : dateKeluar.getDate() <= 14 ? listMinggu[1] : dateKeluar.getDate() <= 21 ? listMinggu[2] : listMinggu[3]
+
+            if (listMinggu.includes(weekKeluar)) {
+              resultWeekly[item.metodeKeluar][listMinggu.indexOf(weekKeluar)]++
+            }
+          }
+        }
+
+        delete resultWeekly.null
+        resultWeekly.tapCard = resultWeekly.TapCard
+        resultWeekly.fingerprint = resultWeekly.fingerPrintId
+        delete resultWeekly.TapCard
+        delete resultWeekly.fingerPrintId
+
         return {
           user: await ctx.prisma.user.count(),
           jabatan: await ctx.prisma.jabatan.count(),
@@ -68,6 +105,10 @@ export const statsRouter = router({
             listMonthBefore: lastSixMonths,
             listData: Object.entries(result).map(([key, value]) => ({ label: key, data: value }))
           },
+          chartsWeekly: {
+            currentMonth: currentMonthName,
+            listWeekBefore: listMinggu,
+            listData: Object.entries(resultWeekly).map(([key, value]) => ({ label: key, data: value }))
           }
         }
       } catch (error) {

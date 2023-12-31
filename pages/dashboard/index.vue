@@ -33,6 +33,12 @@
           :options="chartOptions"
           :data="chartDataBulanan"
         />
+        <DashboardChartOverview
+          :title="`Chart Mingguan ${currentMonth}`"
+          chart-id="chartMingguan"
+          :options="chartOptions"
+          :data="chartDataMingguan"
+        />
       </div>
     </NuxtLayout>
   </div>
@@ -82,9 +88,15 @@ const generateChartData = (labels, datasets) => {
 let chartDataBulanan = ref(null)
 let currentYear = ref(null)
 
+let chartDataMingguan = ref(null)
+let currentMonth = ref(null)
+
 if (statsData.value) {
   currentYear = ref(statsData.value.chartsMonthly.currentYear)
   chartDataBulanan = ref(generateChartData(statsData.value.chartsMonthly.listMonthBefore, statsData.value.chartsMonthly.listData ? statsData.value.chartsMonthly.listData : []))
+
+  currentMonth = ref(statsData.value.chartsWeekly.currentMonth)
+  chartDataMingguan = ref(generateChartData(statsData.value.chartsWeekly.listWeekBefore, statsData.value.chartsWeekly.listData ? statsData.value.chartsWeekly.listData : []))
 }
 
 const chartOptions = ref({
