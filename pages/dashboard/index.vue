@@ -26,14 +26,14 @@
           </template>
         </DashboardCardOverview>
       </div>
-      <div class="grid grid-cols-2 gap-4 mb-4">
-        <DashboardChartOverview
+      <div class="grid grid-cols-1 gap-4 mb-4 xl:grid-cols-2">
+        <DashboardBarChartOverview
           :title="`Chart Bulanan ${currentYear}`"
           chart-id="ChatBulanan"
           :options="chartOptions"
           :data="chartDataBulanan"
         />
-        <DashboardChartOverview
+        <DashboardPieChartOverview
           :title="`Chart Mingguan ${currentMonth}`"
           chart-id="chartMingguan"
           :options="chartOptions"
@@ -47,12 +47,9 @@
 <script setup>
 import { ChartPieIcon, ChartBarIcon, ArrowDownTrayIcon, ArrowUpTrayIcon } from '@heroicons/vue/24/solid'
 import { ref } from 'vue'
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
 
 const { $client } = useNuxtApp()
 const { data: statsData } = await $client.stats.getAll.useQuery()
-
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 const COLORS = {
   faceId: {
@@ -69,7 +66,7 @@ const COLORS = {
   }
 }
 
-const generateChartData = (labels, datasets) => {
+const generateBarChartData = (labels, datasets) => {
   return {
     labels,
     datasets: datasets.map((dataset) => {
@@ -85,22 +82,33 @@ const generateChartData = (labels, datasets) => {
   }
 }
 
+const generatePieChartData = (labels, datasets) => {
+  return {
+    labels,
+    datasets: [{
+      backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
+      data: datasets
+    }]
+  }
+}
+
 let chartDataBulanan = ref(null)
 let currentYear = ref(null)
 
-let chartDataMingguan = ref(null)
+const chartDataMingguan = ref(null)
 let currentMonth = ref(null)
 
 if (statsData.value) {
   currentYear = ref(statsData.value.chartsMonthly.currentYear)
-  chartDataBulanan = ref(generateChartData(statsData.value.chartsMonthly.listMonthBefore, statsData.value.chartsMonthly.listData ? statsData.value.chartsMonthly.listData : []))
+  chartDataBulanan = ref(generateBarChartData(statsData.value.chartsMonthly.listMonthBefore, statsData.value.chartsMonthly.listData ? statsData.value.chartsMonthly.listData : []))
 
   currentMonth = ref(statsData.value.chartsWeekly.currentMonth)
-  chartDataMingguan = ref(generateChartData(statsData.value.chartsWeekly.listWeekBefore, statsData.value.chartsWeekly.listData ? statsData.value.chartsWeekly.listData : []))
+  chartDataMingguan.value = ref(generatePieChartData(statsData.value.chartsWeekly.listWeekBefore, statsData.value.chartsWeekly.listData ? statsData.value.chartsWeekly.listData : []))
 }
 
 const chartOptions = ref({
-  responsive: true
+  responsive: true,
+  maintainAspectRatio: false
 })
 
 useHead({

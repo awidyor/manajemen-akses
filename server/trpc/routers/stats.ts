@@ -55,22 +55,21 @@ export const statsRouter = router({
         // list minggu
         const listMinggu = ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4']
 
-        // get current month
         const currentMonth = new Date().getMonth()
         const currentMonthName = new Date().toLocaleString('default', { month: 'long' })
 
-        const resultWeekly = Object.fromEntries(methods.map(method => [method, Array(4).fill(0)]))
+        const resultWeekly = Array(4).fill(0)
 
         for (const item of data) {
           const dateMasuk = new Date(item.waktuMasuk)
           const dateKeluar = item.waktuKeluar ? new Date(item.waktuKeluar) : null
 
-          // Only consider data from the current year
+          // Only consider data from the current month
           if (dateMasuk.getMonth() === currentMonth) {
             const weekMasuk = dateMasuk.getDate() <= 7 ? listMinggu[0] : dateMasuk.getDate() <= 14 ? listMinggu[1] : dateMasuk.getDate() <= 21 ? listMinggu[2] : listMinggu[3]
 
             if (listMinggu.includes(weekMasuk)) {
-              resultWeekly[item.metodeMasuk][listMinggu.indexOf(weekMasuk)]++
+              resultWeekly[listMinggu.indexOf(weekMasuk)]++
             }
           }
 
@@ -78,16 +77,10 @@ export const statsRouter = router({
             const weekKeluar = dateKeluar.getDate() <= 7 ? listMinggu[0] : dateKeluar.getDate() <= 14 ? listMinggu[1] : dateKeluar.getDate() <= 21 ? listMinggu[2] : listMinggu[3]
 
             if (listMinggu.includes(weekKeluar)) {
-              resultWeekly[item.metodeKeluar][listMinggu.indexOf(weekKeluar)]++
+              resultWeekly[listMinggu.indexOf(weekKeluar)]++
             }
           }
         }
-
-        delete resultWeekly.null
-        resultWeekly.tapCard = resultWeekly.TapCard
-        resultWeekly.fingerprint = resultWeekly.fingerPrintId
-        delete resultWeekly.TapCard
-        delete resultWeekly.fingerPrintId
 
         return {
           user: await ctx.prisma.user.count(),
@@ -108,7 +101,7 @@ export const statsRouter = router({
           chartsWeekly: {
             currentMonth: currentMonthName,
             listWeekBefore: listMinggu,
-            listData: Object.entries(resultWeekly).map(([key, value]) => ({ label: key, data: value }))
+            listData: resultWeekly
           }
         }
       } catch (error) {
