@@ -1,11 +1,6 @@
 <template>
   <div class="bg-white border shadow rounded-xl text-card-foreground">
-    <div class="flex flex-row items-center justify-between p-6 pb-2 space-y-0">
-      <h3 class="text-sm font-medium tracking-tight">
-        {{ title }}
-      </h3>
-    </div>
-    <div class="p-6 pt-0">
+    <div class="p-6">
       <Bar
         :id="chartId"
         :options="options"
@@ -24,7 +19,6 @@ import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, Li
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 const props = defineProps<{
-  title: String,
   chartId: String,
   options: Object,
   data: ChartData<'bar'>

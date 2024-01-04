@@ -1,8 +1,13 @@
+import { z } from 'zod'
 import { publicProcedure, router } from '../trpc'
 
 export const statsRouter = router({
   getAll: publicProcedure
-    .query(async ({ ctx }) => {
+    .input(z.object({
+      filterMonth: z.string().optional(),
+      filterYear: z.string().optional()
+    }))
+    .query(async ({ ctx, input }) => {
       try {
         const data = await ctx.prisma.akses.findMany()
 
@@ -55,8 +60,25 @@ export const statsRouter = router({
         // list minggu
         const listMinggu = ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4']
 
-        const currentMonth = new Date().getMonth()
-        const currentMonthName = new Date().toLocaleString('default', { month: 'long' })
+        let currentMonthWeekly: number
+
+        if (input.filterMonth) {
+          currentMonthWeekly = Number(input.filterMonth) ? Number(input.filterMonth) : new Date().getMonth()
+        } else {
+          currentMonthWeekly = new Date().getMonth()
+        }
+        const currentMonthWeeklyName = input.filterMonth !== undefined ? new Date(currentYear, currentMonthWeekly).toLocaleString('default', { month: 'long' }) : new Date().toLocaleString('default', { month: 'long' })
+
+        let currentYearWeekly: number
+
+        if (input.filterYear) {
+          currentYearWeekly = Number(input.filterYear) ? Number(input.filterYear) : currentYear
+        } else {
+          currentYearWeekly = new Date().getFullYear()
+        }
+        let listYear = [...new Set(data.flatMap(item => [new Date(item.waktuMasuk).getFullYear(), item.waktuKeluar ? new Date(item.waktuKeluar).getFullYear() : null]))]
+        // delete null
+        listYear = listYear.filter(item => item)
 
         const resultWeekly = Array(4).fill(0)
 
@@ -64,8 +86,8 @@ export const statsRouter = router({
           const dateMasuk = new Date(item.waktuMasuk)
           const dateKeluar = item.waktuKeluar ? new Date(item.waktuKeluar) : null
 
-          // Only consider data from the current month
-          if (dateMasuk.getMonth() === currentMonth) {
+          // Only consider data from the current month and year
+          if (dateMasuk.getMonth() === currentMonthWeekly && dateMasuk.getFullYear() === currentYearWeekly) {
             const weekMasuk = dateMasuk.getDate() <= 7 ? listMinggu[0] : dateMasuk.getDate() <= 14 ? listMinggu[1] : dateMasuk.getDate() <= 21 ? listMinggu[2] : listMinggu[3]
 
             if (listMinggu.includes(weekMasuk)) {
@@ -73,7 +95,7 @@ export const statsRouter = router({
             }
           }
 
-          if (dateKeluar && item.metodeKeluar && dateKeluar.getMonth() === currentMonth) {
+          if (dateKeluar && item.metodeKeluar && dateKeluar.getMonth() === currentMonthWeekly && dateKeluar.getFullYear() === currentYearWeekly) {
             const weekKeluar = dateKeluar.getDate() <= 7 ? listMinggu[0] : dateKeluar.getDate() <= 14 ? listMinggu[1] : dateKeluar.getDate() <= 21 ? listMinggu[2] : listMinggu[3]
 
             if (listMinggu.includes(weekKeluar)) {
@@ -99,7 +121,9 @@ export const statsRouter = router({
             listData: Object.entries(result).map(([key, value]) => ({ label: key, data: value }))
           },
           chartsWeekly: {
-            currentMonth: currentMonthName,
+            currentMonth: currentMonthWeeklyName,
+            currentYearWeekly,
+            listYear,
             listWeekBefore: listMinggu,
             listData: resultWeekly
           }

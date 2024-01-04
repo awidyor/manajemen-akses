@@ -5,14 +5,14 @@
 
       <SidebarDashboard />
 
-      <main class="p-4 md:ml-64 min-h-screen pt-20">
+      <main class="min-h-screen p-4 pt-20 pb-10 md:ml-64">
         <slot />
       </main>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { onMounted } from 'vue'
 import { initFlowbite } from 'flowbite'
 
