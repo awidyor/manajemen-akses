@@ -20,8 +20,8 @@ export const reportingRouter = router({
       z.object({
         userId: z.string(),
         tempatMasuk: z.string(),
-        metodeMasuk: z.string(),
-        metodeKeluar: z.string().optional(),
+        metodeMasuk: z.enum(['fingerPrintId', 'TapCard', 'faceId']),
+        metodeKeluar: z.enum(['fingerPrintId', 'TapCard', 'faceId']).optional(),
         waktuMasuk: z.string(),
         waktuKeluar: z.string().optional()
       })
@@ -45,12 +45,8 @@ export const reportingRouter = router({
 
         return akses
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.log(error)
       }
-    }),
-
-  hello: publicProcedure
-    .query(async ({ ctx }) => {
-      return 'Hello World'
     })
 })
