@@ -29,22 +29,22 @@
       <div class="grid grid-cols-1 gap-4 mb-4 xl:grid-cols-2">
         <div class="flex flex-col gap-2">
           <h2 class="text-lg font-semibold">
-            Chart Bulanan {{ currentYear }}
+            Chart Total Masuk Bulanan {{ currentYear }}
           </h2>
           <DashboardBarChartOverview
             chart-id="ChatBulanan"
             :options="chartOptions"
-            :data="chartDataBulanan"
+            :data="chartDataBulananMasuk"
           />
         </div>
         <div class="flex flex-col gap-2">
           <h2 class="text-lg font-semibold">
-            Chart Masuk/Keluar {{ currentYear }}
+            Chart Total Keluar Bulanan {{ currentYear }}
           </h2>
           <DashboardBarChartOverview
             chart-id="ChatBulanan"
             :options="chartOptions"
-            :data="chartDataBulanan"
+            :data="chartDataBulananKeluar"
           />
         </div>
       </div>
@@ -135,7 +135,8 @@ const generatePieChartData = (labels, datasets) => {
   }
 }
 
-const chartDataBulanan = ref(null)
+const chartDataBulananMasuk = ref(null)
+const chartDataBulananKeluar = ref(null)
 const currentYear = ref(null)
 
 let chartDataMingguanReactive = reactive(null)
@@ -162,14 +163,14 @@ watchEffect(async () => {
 watchEffect(() => {
   if (statsData.value && statsData.value.chartsMonthly) {
     currentYear.value = statsData.value.chartsMonthly.currentYear
-    chartDataBulanan.value = generateBarChartData(statsData.value.chartsMonthly.listMonthBefore, statsData.value.chartsMonthly.listData ? statsData.value.chartsMonthly.listData : [])
+    chartDataBulananMasuk.value = generateBarChartData(statsData.value.chartsMonthly.listMonthBefore, statsData.value.chartsMonthly.listDataMasuk ? statsData.value.chartsMonthly.listDataMasuk : [])
+    chartDataBulananKeluar.value = generateBarChartData(statsData.value.chartsMonthly.listMonthBefore, statsData.value.chartsMonthly.listDataKeluar ? statsData.value.chartsMonthly.listDataKeluar : [])
   }
 
   if (statsData.value && statsData.value.chartsWeekly) {
     currentMonthWeekly.value = statsData.value.chartsWeekly.currentMonth
     currentYearWeekly.value = statsData.value.chartsWeekly.currentYearWeekly
     listYearWeekly.value = statsData.value.chartsWeekly.listYear
-    // chartDataMingguan.value = generatePieChartData(statsData.value.chartsWeekly.listWeekBefore, statsData.value.chartsWeekly.listData ? statsData.value.chartsWeekly.listData : [])
     chartDataMingguanReactive = generatePieChartData(statsData.value.chartsWeekly.listWeekBefore, statsData.value.chartsWeekly.listData ? statsData.value.chartsWeekly.listData : [])
   }
 })

@@ -23,7 +23,8 @@ export const statsRouter = router({
         }).reverse()
 
         // Initialize the final result with methods as keys and arrays of zeros as values
-        const result = Object.fromEntries(methods.map(method => [method, Array(6).fill(0)]))
+        const resultMasuk = Object.fromEntries(methods.map(method => [method, Array(6).fill(0)]))
+        const resultKeluar = Object.fromEntries(methods.map(method => [method, Array(6).fill(0)]))
 
         // Get the current year
         const currentYear = new Date().getFullYear()
@@ -31,31 +32,41 @@ export const statsRouter = router({
         // Iterate over the data and increment the corresponding month for each method
         for (const item of data) {
           const dateMasuk = new Date(item.waktuMasuk)
-          const dateKeluar = item.waktuKeluar ? new Date(item.waktuKeluar) : null
 
           // Only consider data from the current year
           if (dateMasuk.getFullYear() === currentYear) {
             const monthMasuk = dateMasuk.toLocaleString('default', { month: 'long' })
 
-            if (lastSixMonths.includes(monthMasuk)) {
-              result[item.metodeMasuk][lastSixMonths.indexOf(monthMasuk)]++
-            }
-          }
-
-          if (dateKeluar && item.metodeKeluar && dateKeluar.getFullYear() === currentYear) {
-            const monthKeluar = dateKeluar.toLocaleString('default', { month: 'long' })
-
-            if (lastSixMonths.includes(monthKeluar)) {
-              result[item.metodeKeluar][lastSixMonths.indexOf(monthKeluar)]++
+            if (lastSixMonths.includes(monthMasuk) && item.metodeMasuk) {
+              resultMasuk[item.metodeMasuk][lastSixMonths.indexOf(monthMasuk)]++
             }
           }
         }
 
-        delete result.null
-        result.tapCard = result.TapCard
-        result.fingerprint = result.fingerPrintId
-        delete result.TapCard
-        delete result.fingerPrintId
+        delete resultMasuk.null
+        resultMasuk.tapCard = resultMasuk.TapCard
+        resultMasuk.fingerprint = resultMasuk.fingerPrintId
+        delete resultMasuk.TapCard
+        delete resultMasuk.fingerPrintId
+
+        for (const item of data) {
+          const dateKeluar = item.waktuKeluar ? new Date(item.waktuKeluar) : null
+
+          // Only consider data from the current year
+          if (dateKeluar && dateKeluar.getFullYear() === currentYear) {
+            const monthKeluar = dateKeluar.toLocaleString('default', { month: 'long' })
+
+            if (lastSixMonths.includes(monthKeluar) && item.metodeKeluar) {
+              resultKeluar[item.metodeKeluar][lastSixMonths.indexOf(monthKeluar)]++
+            }
+          }
+        }
+
+        delete resultKeluar.null
+        resultKeluar.tapCard = resultKeluar.TapCard
+        resultKeluar.fingerprint = resultKeluar.fingerPrintId
+        delete resultKeluar.TapCard
+        delete resultKeluar.fingerPrintId
 
         // list minggu
         const listMinggu = ['Minggu 1', 'Minggu 2', 'Minggu 3', 'Minggu 4']
@@ -118,7 +129,8 @@ export const statsRouter = router({
           chartsMonthly: {
             currentYear,
             listMonthBefore: lastSixMonths,
-            listData: Object.entries(result).map(([key, value]) => ({ label: key, data: value }))
+            listDataMasuk: Object.entries(resultMasuk).map(([key, value]) => ({ label: key, data: value })),
+            listDataKeluar: Object.entries(resultKeluar).map(([key, value]) => ({ label: key, data: value }))
           },
           chartsWeekly: {
             currentMonth: currentMonthWeeklyName,
