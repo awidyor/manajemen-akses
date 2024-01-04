@@ -17,9 +17,10 @@ export const statsRouter = router({
         // Get the last 6 months
         const lastSixMonths = Array.from({ length: 6 }, (_, i) => {
           const date = new Date()
-          date.setDate(1) // set the day to the 1st
           date.setMonth(date.getMonth() - i)
-          return date.toLocaleString('default', { month: 'long' })
+          const year = date.getFullYear()
+          const month = date.getMonth()
+          return new Date(year, month, 1).toLocaleString('default', { month: 'long' })
         }).reverse()
 
         // Initialize the final result with methods as keys and arrays of zeros as values
