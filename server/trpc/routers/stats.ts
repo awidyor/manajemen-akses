@@ -14,14 +14,11 @@ export const statsRouter = router({
         // Get the unique methods
         const methods = [...new Set(data.flatMap(item => [item.metodeMasuk, item.metodeKeluar]))]
 
-        // Get the last 6 months
-        const lastSixMonths = Array.from({ length: 6 }, (_, i) => {
-          const date = new Date()
-          date.setMonth(date.getMonth() - i)
-          const year = date.getFullYear()
-          const month = date.getMonth()
-          return new Date(year, month, 1).toLocaleString('default', { month: 'long' })
-        }).reverse()
+        const quarter1Months = ['January', 'February', 'March', 'April', 'May', 'June']
+        const quarter2Months = ['July', 'August', 'September', 'October', 'November', 'December']
+
+        const currentMonth = new Date().getMonth()
+        const months = currentMonth <= 5 ? quarter1Months : quarter2Months
 
         // Initialize the final result with methods as keys and arrays of zeros as values
         const resultMasuk = Object.fromEntries(methods.map(method => [method, Array(6).fill(0)]))
@@ -38,8 +35,8 @@ export const statsRouter = router({
           if (dateMasuk.getFullYear() === currentYear) {
             const monthMasuk = dateMasuk.toLocaleString('default', { month: 'long' })
 
-            if (lastSixMonths.includes(monthMasuk) && item.metodeMasuk) {
-              resultMasuk[item.metodeMasuk][lastSixMonths.indexOf(monthMasuk)]++
+            if (months.includes(monthMasuk) && item.metodeMasuk) {
+              resultMasuk[item.metodeMasuk][months.indexOf(monthMasuk)]++
             }
           }
         }
@@ -57,8 +54,8 @@ export const statsRouter = router({
           if (dateKeluar && dateKeluar.getFullYear() === currentYear) {
             const monthKeluar = dateKeluar.toLocaleString('default', { month: 'long' })
 
-            if (lastSixMonths.includes(monthKeluar) && item.metodeKeluar) {
-              resultKeluar[item.metodeKeluar][lastSixMonths.indexOf(monthKeluar)]++
+            if (months.includes(monthKeluar) && item.metodeKeluar) {
+              resultKeluar[item.metodeKeluar][months.indexOf(monthKeluar)]++
             }
           }
         }
@@ -129,7 +126,7 @@ export const statsRouter = router({
           }),
           chartsMonthly: {
             currentYear,
-            listMonthBefore: lastSixMonths,
+            listMonthBefore: months,
             listDataMasuk: Object.entries(resultMasuk).map(([key, value]) => ({ label: key, data: value })),
             listDataKeluar: Object.entries(resultKeluar).map(([key, value]) => ({ label: key, data: value }))
           },
