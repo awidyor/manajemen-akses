@@ -6,23 +6,35 @@
       </h1>
 
       <div class="flex gap-2">
-        <button type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" @click="exportDataToPdf">
+        <button
+          type="submit"
+          class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          @click="exportDataToPdf"
+        >
           Export PDF
         </button>
-        <ClientOnly
-          fallback-tag="export-excel"
-          fallback="Loading..."
-        >
-          <download-excel :data="dataForExcel" class="text-white inline-flex items-center bg-emerald-700 hover:bg-emerald-800 focus:ring-4 focus:outline-none focus:ring-emerald-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-emerald-600 dark:hover:bg-emerald-700 dark:focus:ring-emerald-800 hover:cursor-pointer">
+        <ClientOnly>
+          <template #fallback>
+            <button class="text-white inline-flex items-center bg-emerald-700 hover:bg-emerald-800 focus:ring-4 focus:outline-none focus:ring-emerald-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-emerald-600 dark:hover:bg-emerald-700 dark:focus:ring-emerald-800 hover:cursor-pointer" disabled>
+              Memuat...
+            </button>
+          </template>
+          <download-excel
+            :data="dataForExcel"
+            class="text-white inline-flex items-center bg-emerald-700 hover:bg-emerald-800 focus:ring-4 focus:outline-none focus:ring-emerald-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-emerald-600 dark:hover:bg-emerald-700 dark:focus:ring-emerald-800 hover:cursor-pointer"
+          >
             Export Excel
           </download-excel>
         </ClientOnly>
-        <button type="submit" class="text-white inline-flex items-center bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800" @click="printData">
+        <button
+          type="submit"
+          class="text-white inline-flex items-center bg-yellow-700 hover:bg-yellow-800 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800"
+          @click="printData"
+        >
           Print Laporan
         </button>
       </div>
-
-      <DashboardTableLaporan :data="data" />
+      <DashboardLaporanDataTable :columns="columns" :data="data" />
     </NuxtLayout>
   </div>
 </template>
@@ -31,6 +43,7 @@
 import { jsPDF } from 'jspdf'
 import 'jspdf-autotable'
 import JsonExcel from 'vue-json-excel3'
+import { columns } from '@/components/dashboard/laporan/columns'
 
 const { $client } = useNuxtApp()
 
@@ -55,8 +68,24 @@ if (data.value) {
       'Tempat Masuk': d.tempatMasuk,
       'Metode Masuk': d.metodeMasuk,
       'Metode Keluar': d.metodeKeluar ?? '-',
-      'Waktu Masuk': new Date(d.waktuMasuk).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true }),
-      'Waktu Keluar': d.waktuKeluar ? new Date(d.waktuKeluar).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true }) : '-'
+      'Waktu Masuk': new Date(d.waktuMasuk).toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+      }),
+      'Waktu Keluar': d.waktuKeluar
+        ? new Date(d.waktuKeluar).toLocaleString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: true
+        })
+        : '-'
     }
     dataForExcel.push(dataRow)
   })
@@ -65,7 +94,16 @@ if (data.value) {
 const exportDataToPdf = () => {
   // eslint-disable-next-line new-cap
   const doc = new jsPDF()
-  const tableColumn = ['Nama', 'Jabatan', 'Jenis Kelamin', 'Tempat Masuk', 'Metode Masuk', 'Metode Keluar', 'Waktu Masuk', 'Waktu Keluar']
+  const tableColumn = [
+    'Nama',
+    'Jabatan',
+    'Jenis Kelamin',
+    'Tempat Masuk',
+    'Metode Masuk',
+    'Metode Keluar',
+    'Waktu Masuk',
+    'Waktu Keluar'
+  ]
   const tableRows = []
 
   data.value.forEach((d) => {
@@ -76,8 +114,24 @@ const exportDataToPdf = () => {
       d.tempatMasuk,
       d.metodeMasuk,
       d.metodeKeluar ?? '-',
-      new Date(d.waktuMasuk).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true }),
-      d.waktuKeluar ? new Date(d.waktuKeluar).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true }) : '-'
+      new Date(d.waktuMasuk).toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+      }),
+      d.waktuKeluar
+        ? new Date(d.waktuKeluar).toLocaleString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: true
+        })
+        : '-'
     ]
     tableRows.push(dataRow)
   })
@@ -101,8 +155,24 @@ const printData = () => {
       d.tempatMasuk,
       d.metodeMasuk,
       d.metodeKeluar ?? '-',
-      new Date(d.waktuMasuk).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true }),
-      d.waktuKeluar ? new Date(d.waktuKeluar).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true }) : '-'
+      new Date(d.waktuMasuk).toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+      }),
+      d.waktuKeluar
+        ? new Date(d.waktuKeluar).toLocaleString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric',
+          hour12: true
+        })
+        : '-'
     ]
     tableRows.push(dataRow)
   })
@@ -142,8 +212,9 @@ const printData = () => {
             </tr>
           </thead>
           <tbody>
-            ${tableRows.map((row) => {
-              return `
+            ${tableRows
+              .map((row) => {
+                return `
                 <tr>
                   <td>${row[0]}</td>
                   <td>${row[1]}</td>
@@ -155,7 +226,8 @@ const printData = () => {
                   <td>${row[7]}</td>
                 </tr>
               `
-            }).join('')}
+              })
+              .join('')}
           </tbody>
         </table>
       </body>
@@ -166,5 +238,4 @@ const printData = () => {
   myWindow.print()
   myWindow.close()
 }
-
 </script>

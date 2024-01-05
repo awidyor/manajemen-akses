@@ -1,14 +1,9 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: [
-    '@nuxtjs/kinde',
-    '@nuxtjs/tailwindcss'
-  ],
+  modules: ['@nuxtjs/kinde', '@nuxtjs/tailwindcss'],
 
   build: {
-    transpile: [
-      'trpc-nuxt'
-    ]
+    transpile: ['trpc-nuxt']
   },
 
   typescript: {
@@ -19,5 +14,7 @@ export default defineNuxtConfig({
     timeline: {
       enabled: true
     }
-  }
+  },
+
+  css: ['~/assets/css/input.css']
 })

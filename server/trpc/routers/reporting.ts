@@ -11,6 +11,9 @@ export const reportingRouter = router({
               jabatan: true
             }
           }
+        },
+        orderBy: {
+          waktuMasuk: 'desc'
         }
       })
     }),
