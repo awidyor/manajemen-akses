@@ -32,6 +32,7 @@
             Chart Total Masuk Bulanan {{ currentYear }}
           </h2>
           <DashboardBarChartOverview
+            :key="currentYear"
             chart-id="ChatBulanan"
             :options="chartOptions"
             :data="chartDataBulananMasuk"
@@ -42,6 +43,7 @@
             Chart Total Keluar Bulanan {{ currentYear }}
           </h2>
           <DashboardBarChartOverview
+            :key="currentYear"
             chart-id="ChatBulanan"
             :options="chartOptions"
             :data="chartDataBulananKeluar"
@@ -135,11 +137,11 @@ const generatePieChartData = (labels, datasets) => {
   }
 }
 
-const chartDataBulananMasuk = ref({})
-const chartDataBulananKeluar = ref({})
+let chartDataBulananMasuk = reactive({})
+let chartDataBulananKeluar = reactive({})
 const currentYear = ref(null)
 
-const chartDataMingguanReactive = reactive({})
+let chartDataMingguanReactive = reactive({})
 const currentMonthWeekly = ref(null)
 const currentYearWeekly = ref(null)
 const listYearWeekly = ref(null)
@@ -163,15 +165,18 @@ watchEffect(async () => {
 watchEffect(() => {
   if (statsData.value && statsData.value.chartsMonthly) {
     currentYear.value = statsData.value.chartsMonthly.currentYear
-    chartDataBulananMasuk.value = generateBarChartData(statsData.value.chartsMonthly.listMonthBefore, statsData.value.chartsMonthly.listDataMasuk ? statsData.value.chartsMonthly.listDataMasuk : [])
-    chartDataBulananKeluar.value = generateBarChartData(statsData.value.chartsMonthly.listMonthBefore, statsData.value.chartsMonthly.listDataKeluar ? statsData.value.chartsMonthly.listDataKeluar : [])
+    const chartDataMasuk = generateBarChartData(statsData.value.chartsMonthly.listMonthBefore, statsData.value.chartsMonthly.listDataMasuk ? statsData.value.chartsMonthly.listDataMasuk : [])
+    const chartDataKeluar = generateBarChartData(statsData.value.chartsMonthly.listMonthBefore, statsData.value.chartsMonthly.listDataKeluar ? statsData.value.chartsMonthly.listDataKeluar : [])
+    chartDataBulananMasuk = { ...chartDataMasuk }
+    chartDataBulananKeluar = { ...chartDataKeluar }
   }
 
   if (statsData.value && statsData.value.chartsWeekly) {
     currentMonthWeekly.value = statsData.value.chartsWeekly.currentMonth
     currentYearWeekly.value = statsData.value.chartsWeekly.currentYearWeekly
     listYearWeekly.value = statsData.value.chartsWeekly.listYear
-    chartDataMingguanReactive = generatePieChartData(statsData.value.chartsWeekly.listWeekBefore, statsData.value.chartsWeekly.listData ? statsData.value.chartsWeekly.listData : [])
+    const chartData = generatePieChartData(statsData.value.chartsWeekly.listWeekBefore, statsData.value.chartsWeekly.listData ? statsData.value.chartsWeekly.listData : [])
+    chartDataMingguanReactive = { ...chartData }
   }
 })
 
