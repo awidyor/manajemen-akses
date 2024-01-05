@@ -1,3 +1,5 @@
+<!-- eslint-disable vue/require-default-prop -->
+<!-- eslint-disable comma-dangle -->
 <script setup lang="ts">
 import {
   SelectContent,

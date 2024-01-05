@@ -1,3 +1,4 @@
+<!-- eslint-disable comma-dangle -->
 <script setup lang="ts">
 import {
   DropdownMenuSubContent,

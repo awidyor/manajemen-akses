@@ -1,3 +1,5 @@
+<!-- eslint-disable vue/multi-word-component-names -->
+<!-- eslint-disable vue/require-default-prop -->
 <script setup lang="ts">
 import { Primitive, type PrimitiveProps } from 'radix-vue'
 import { buttonVariants } from '.'
@@ -10,7 +12,7 @@ interface Props extends PrimitiveProps {
 }
 
 withDefaults(defineProps<Props>(), {
-  as: 'button',
+  as: 'button'
 })
 </script>
 

@@ -1,3 +1,4 @@
+<!-- eslint-disable comma-dangle -->
 <script setup lang="ts">
 import { SelectIcon, SelectTrigger, type SelectTriggerProps } from 'radix-vue'
 import { ChevronDownIcon } from '@radix-icons/vue'

@@ -1,3 +1,4 @@
+/* eslint-disable comma-dangle */
 import { cva } from 'class-variance-authority'
 
 export { default as Button } from './Button.vue'

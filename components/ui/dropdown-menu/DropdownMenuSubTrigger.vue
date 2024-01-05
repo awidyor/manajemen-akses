@@ -1,3 +1,4 @@
+<!-- eslint-disable comma-dangle -->
 <script setup lang="ts">
 import {
   DropdownMenuSubTrigger,
@@ -20,6 +21,6 @@ const props = defineProps<DropdownMenuSubTriggerProps & { class?: string }>()
     ]"
   >
     <slot />
-    <ChevronRightIcon class="ml-auto h-4 w-4" />
+    <ChevronRightIcon class="w-4 h-4 ml-auto" />
   </DropdownMenuSubTrigger>
 </template>

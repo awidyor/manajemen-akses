@@ -13,7 +13,6 @@ module.exports = {
     "./app.vue",
   ],
   darkMode: ["class"],
-
   theme: {
     container: {
       center: true,

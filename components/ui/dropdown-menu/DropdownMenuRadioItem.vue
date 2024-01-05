@@ -1,3 +1,4 @@
+<!-- eslint-disable comma-dangle -->
 <script setup lang="ts">
 import {
   DropdownMenuItemIndicator,
@@ -25,7 +26,7 @@ const emits = defineEmits<DropdownMenuRadioItemEmits>()
     <span class="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
 
       <DropdownMenuItemIndicator>
-        <DotFilledIcon class="h-4 w-4 fill-current" />
+        <DotFilledIcon class="w-4 h-4 fill-current" />
       </DropdownMenuItemIndicator>
     </span>
     <slot />

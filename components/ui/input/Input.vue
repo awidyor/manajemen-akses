@@ -1,3 +1,7 @@
+<!-- eslint-disable vue/multi-word-component-names -->
+<!-- eslint-disable func-call-spacing -->
+<!-- eslint-disable comma-dangle -->
+<!-- eslint-disable vue/multi-word-component-names -->
 <script setup lang="ts">
 import { useAttrs } from 'vue'
 import { useVModel } from '@vueuse/core'

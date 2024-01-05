@@ -1,3 +1,4 @@
+<!-- eslint-disable comma-dangle -->
 <script setup lang="ts">
 import TableRow from './TableRow.vue'
 import TableCell from './TableCell.vue'
