@@ -4,7 +4,18 @@ import { publicProcedure, router } from '../trpc'
 export const jabatanRouter = router({
   getAll: publicProcedure
     .query(({ ctx }) => {
-      return ctx.prisma.jabatan.findMany()
+      return ctx.prisma.jabatan.findMany({
+        include: {
+          _count: {
+            select: {
+              user: true
+            }
+          }
+        },
+        orderBy: {
+          createdAt: 'desc'
+        }
+      })
     }),
 
   create: publicProcedure

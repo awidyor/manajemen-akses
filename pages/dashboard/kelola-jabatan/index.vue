@@ -6,14 +6,15 @@
       </h1>
 
       <DashboardNewJabatan />
-
-      <DashboardTableJabatan :data="data" />
+      <DashboardJabatanDataTable :columns="columns" :data="data" />
     </NuxtLayout>
   </div>
 </template>
 
 <script setup type="ts">
 import { initFlowbite } from 'flowbite'
+import { columns } from '@/components/dashboard/jabatan/columns'
+
 const { $client } = useNuxtApp()
 
 const { data } = await $client.jabatan.getAll.useQuery()
