@@ -7,13 +7,14 @@
 
       <DashboardNewUser />
 
-      <DashboardTableUser :data="data" />
+      <DashboardKelolaUserDataTable :columns="columns" :data="data" />
     </NuxtLayout>
   </div>
 </template>
 
 <script setup type="ts">
 import { initFlowbite } from 'flowbite'
+import { columns } from '@/components/dashboard/kelola-user/columns'
 const { $client } = useNuxtApp()
 
 const { data } = await $client.user.getAll.useQuery()

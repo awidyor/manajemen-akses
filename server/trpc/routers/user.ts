@@ -7,6 +7,9 @@ export const userRouter = router({
       return ctx.prisma.user.findMany({
         include: {
           jabatan: true
+        },
+        orderBy: {
+          createdAt: 'desc'
         }
       })
     }),

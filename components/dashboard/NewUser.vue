@@ -1,123 +1,137 @@
 <template>
-  <button id="addUserModalButton" data-modal-target="addUserModal" data-modal-toggle="addUserModal" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
-    Tambah User
-  </button>
+  <Dialog>
+    <DialogTrigger as-child>
+      <button id="addUserModalButton" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+        Tambah User
+      </button>
+    </DialogTrigger>
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle>Form Tambah User</DialogTitle>
+        <DialogDescription>
+          Form untuk menambahkan user baru.
+        </DialogDescription>
+      </DialogHeader>
 
-  <div id="addUserModal" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 items-center justify-center hidden w-full overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full">
-    <div class="relative w-full h-full max-w-2xl p-4 md:h-auto">
-      <!-- Modal content -->
-      <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
-        <!-- Modal header -->
-        <div class="flex items-center justify-between pb-4 mb-4 border-b rounded-t sm:mb-5 dark:border-gray-600">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-            Form Tambah User
-          </h3>
-          <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="addUserModal">
-            <XMarkIcon class="w-5 h-5" />
-            <span class="sr-only">Close modal</span>
-          </button>
+      <form @submit.prevent="addUser">
+        <div class="flex flex-row gap-2">
+          <div class="flex-1">
+            <label for="fingerPrintId" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ID Sidik Jari</label>
+            <input
+              id="fingerPrintId"
+              type="text"
+              name="fingerPrintId"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-4"
+              placeholder="Tulis ID sidik jari user"
+            >
+          </div>
+
+          <div class="flex-1">
+            <label for="tapCardId" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tap Card ID</label>
+            <input
+              id="tapCardId"
+              type="text"
+              name="tapCardId"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-4"
+              placeholder="Tulis tap card ID user"
+            >
+          </div>
         </div>
-        <!-- Modal body -->
-        <form @submit.prevent="addUser">
-          <div class="flex flex-row gap-2">
-            <div class="flex-1">
-              <label for="fingerPrintId" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ID Sidik Jari</label>
-              <input
-                id="fingerPrintId"
-                type="text"
-                name="fingerPrintId"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-4"
-                placeholder="Tulis ID sidik jari user"
-              >
-            </div>
 
-            <div class="flex-1">
-              <label for="tapCardId" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tap Card ID</label>
-              <input
-                id="tapCardId"
-                type="text"
-                name="tapCardId"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-4"
-                placeholder="Tulis tap card ID user"
-              >
-            </div>
+        <label for="faceId" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Face ID</label>
+        <input
+          id="faceId"
+          type="text"
+          name="faceId"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-4"
+          placeholder="Tulis face ID user"
+        >
+
+        <label for="nama" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama</label>
+        <input
+          id="nama"
+          type="text"
+          name="nama"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-4"
+          placeholder="Tulis nama user"
+          required
+        >
+
+        <div class="flex flex-row gap-2">
+          <div class="flex-1">
+            <label for="jabatanId" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jabatan</label>
+            <select
+              id="jabatanId"
+              name="jabatanId"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-4"
+              required
+            >
+              <option value="" selected>
+                Pilih Jabatan
+              </option>
+              <option v-for="(jab, index) in jabatanOptions" :key="index" :value="jab.value">
+                {{ jab.text }}
+              </option>
+            </select>
           </div>
 
-          <label for="faceId" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Face ID</label>
-          <input
-            id="faceId"
-            type="text"
-            name="faceId"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-4"
-            placeholder="Tulis face ID user"
-          >
-
-          <label for="nama" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nama</label>
-          <input
-            id="nama"
-            type="text"
-            name="nama"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-4"
-            placeholder="Tulis nama user"
-            required
-          >
-
-          <div class="flex flex-row gap-2">
-            <div class="flex-1">
-              <label for="jabatanId" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jabatan</label>
-              <select
-                id="jabatanId"
-                name="jabatanId"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-4"
-                required
-              >
-                <option value="" selected>
-                  Pilih Jabatan
-                </option>
-                <option v-for="(jab, index) in jabatanOptions" :key="index" :value="jab.value">
-                  {{ jab.text }}
-                </option>
-              </select>
-            </div>
-
-            <div class="flex-1">
-              <label for="jenisKelamin" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenis Kelamin</label>
-              <select
-                id="jenisKelamin"
-                name="jenisKelamin"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-4"
-                required
-              >
-                <option value="" selected>
-                  Pilih Jenis Kelamin
-                </option>
-                <option value="L">
-                  Laki-Laki
-                </option>
-                <option value="P">
-                  Perempuan
-                </option>
-              </select>
-            </div>
+          <div class="flex-1">
+            <label for="jenisKelamin" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Jenis Kelamin</label>
+            <select
+              id="jenisKelamin"
+              name="jenisKelamin"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-4"
+              required
+            >
+              <option value="" selected>
+                Pilih Jenis Kelamin
+              </option>
+              <option value="L">
+                Laki-Laki
+              </option>
+              <option value="P">
+                Perempuan
+              </option>
+            </select>
           </div>
+        </div>
 
-          <button :disabled="isLoading" type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-            <PlusIcon class="w-6 h-6 mr-1 -ml-1" />
-            Simpan
-          </button>
+        <DialogFooter class="sm:justify-start">
+          <div class="flex gap-2">
+            <button :disabled="isLoading" type="submit" class="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+              <PlusIcon class="w-6 h-6 mr-1 -ml-1" />
+              Simpan
+            </button>
+            <DialogClose as-child>
+              <Button id="close-dialog" type="button" variant="secondary" class="hidden">
+                Close
+              </Button>
+            </DialogClose>
+          </div>
           <p v-if="errorMessage" class="mt-2 text-sm text-red-500">
             {{ errorMessage }}
           </p>
-        </form>
-      </div>
-    </div>
-  </div>
+        </DialogFooter>
+      </form>
+    </DialogContent>
+  </Dialog>
 </template>
 
 <script setup>
 import { getQueryKey } from 'trpc-nuxt/client'
 import { initFlowbite } from 'flowbite'
-import { PlusIcon, XMarkIcon } from '@heroicons/vue/24/solid'
+import { PlusIcon } from '@heroicons/vue/24/solid'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogClose,
+  DialogTrigger
+} from '@/components/ui/dialog'
+
 const { $client } = useNuxtApp()
 
 const previousUser = ref([])
@@ -165,7 +179,7 @@ const addUser = async (payload) => {
       jenisKelamin: payload.target.jenisKelamin.value
     })
     await refreshNuxtData(queryKey)
-    document.querySelector('[data-modal-toggle="addUserModal"]').click()
+    document.getElementById('close-dialog').click()
     errorMessage.value = ''
     initFlowbite()
   } catch (error) {
