@@ -5,22 +5,22 @@
         Overview
       </h1>
       <div class="grid grid-cols-1 gap-4 mb-4 sm:grid-cols-2 lg:grid-cols-4">
-        <DashboardCardOverview title="Total Jabatan" :value="statsData.jabatan">
+        <DashboardCardOverview title="Total Jabatan" :value="statsData?.jabatan ?? 0">
           <template #icon>
             <ChartPieIcon class="w-4 h-4 text-muted-foreground" />
           </template>
         </DashboardCardOverview>
-        <DashboardCardOverview title="Total User" :value="statsData.user">
+        <DashboardCardOverview title="Total User" :value="statsData?.user ?? 0">
           <template #icon>
             <ChartBarIcon class="w-4 h-4 text-muted-foreground" />
           </template>
         </DashboardCardOverview>
-        <DashboardCardOverview title="Total Masuk" :value="statsData.totalIn">
+        <DashboardCardOverview title="Total Masuk" :value="statsData?.totalIn ?? 0">
           <template #icon>
             <ArrowDownTrayIcon class="w-4 h-4 text-muted-foreground" />
           </template>
         </DashboardCardOverview>
-        <DashboardCardOverview title="Total Keluar" :value="statsData.totalOut">
+        <DashboardCardOverview title="Total Keluar" :value="statsData?.totalOut ?? 0">
           <template #icon>
             <ArrowUpTrayIcon class="w-4 h-4 text-muted-foreground" />
           </template>
@@ -135,11 +135,11 @@ const generatePieChartData = (labels, datasets) => {
   }
 }
 
-const chartDataBulananMasuk = ref(null)
-const chartDataBulananKeluar = ref(null)
+const chartDataBulananMasuk = ref({})
+const chartDataBulananKeluar = ref({})
 const currentYear = ref(null)
 
-let chartDataMingguanReactive = reactive(null)
+const chartDataMingguanReactive = reactive({})
 const currentMonthWeekly = ref(null)
 const currentYearWeekly = ref(null)
 const listYearWeekly = ref(null)
