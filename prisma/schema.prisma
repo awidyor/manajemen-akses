@@ -37,6 +37,7 @@ model Akses {
   id           String   @id @default(uuid())
   userId       String
   tempatMasuk  String
+  tempatKeluar String?
   metodeMasuk  String
   metodeKeluar String?
   waktuMasuk   DateTime
