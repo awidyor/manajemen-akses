@@ -7,13 +7,13 @@ generator client {
 
 datasource db {
   // For local development, you can uncomment the code below:
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  // provider = "mysql"
+  // url      = env("DATABASE_URL")
 
   // Or, to connect to a production database, you can uncomment this:
-  // provider  = "postgresql"
-  // url       = env("DATABASE_URL")
-  // directUrl = env("DATABASE_URL_NON_POOLING")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL_NON_POOLING")
 }
 
 model Jabatan {
