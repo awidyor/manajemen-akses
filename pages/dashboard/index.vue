@@ -201,8 +201,8 @@ const listMonth = ref([
 ])
 
 const filterChartWeekly = (payload) => {
-  monthFilter.value = payload.target.month.value !== 'Pilih Bulan' ? payload.target.month.value : undefined
-  yearFilter.value = payload.target.year.value !== 'Pilih Tahun' ? payload.target.year.value : undefined
+  filterMonth.value = payload.target.month.value !== 'Pilih Bulan' ? payload.target.month.value : undefined
+  filterYear.value = payload.target.year.value !== 'Pilih Tahun' ? payload.target.year.value : undefined
 }
 
 useHead({
