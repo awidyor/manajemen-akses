@@ -3,19 +3,66 @@ import { publicProcedure, router } from '../trpc'
 
 export const reportingRouter = router({
   getAll: publicProcedure
-    .query(({ ctx }) => {
-      return ctx.prisma.akses.findMany({
-        include: {
-          user: {
-            include: {
-              jabatan: true
-            }
-          }
-        },
-        orderBy: {
-          waktuMasuk: 'desc'
-        }
+    .input(
+      z.object({
+        monthFilter: z.string().optional().nullable(),
+        yearFilter: z.string().optional().nullable()
       })
+    )
+    .query(async ({ ctx, input }) => {
+      try {
+        const { monthFilter, yearFilter } = input
+
+        const yearNow = new Date().getFullYear()
+
+        let waktuMasuk
+
+        if (monthFilter && yearFilter) {
+          waktuMasuk = {
+            gte: new Date(Number(yearFilter), Number(monthFilter), 1),
+            lt: new Date(Number(yearFilter), Number(monthFilter) + 1, 1)
+          }
+        } else if (monthFilter && !yearFilter) {
+          waktuMasuk = {
+            gte: new Date(yearNow, Number(monthFilter), 1),
+            lt: new Date(yearNow, Number(monthFilter) + 1, 1)
+          }
+        } else if (!monthFilter && yearFilter) {
+          waktuMasuk = {
+            gte: new Date(Number(yearFilter), 0, 1),
+            lt: new Date(Number(yearFilter) + 1, 0, 1)
+          }
+        } else {
+          waktuMasuk = undefined
+        }
+
+        const records = await ctx.prisma.akses.findMany({
+          include: {
+            user: {
+              include: {
+                jabatan: true
+              }
+            }
+          },
+          where: {
+            waktuMasuk
+          },
+          orderBy: {
+            waktuMasuk: 'desc'
+          }
+        })
+
+        const fullData = await ctx.prisma.akses.findMany()
+        const listYear = [...new Set(fullData.flatMap(item => [new Date(item.waktuMasuk).getFullYear(), item.waktuKeluar ? new Date(item.waktuKeluar).getFullYear() : null]))].filter(item => item)
+
+        return {
+          listYear,
+          records
+        }
+      } catch (error) {
+        console.error(error)
+        throw error
+      }
     }),
 
   create: publicProcedure
