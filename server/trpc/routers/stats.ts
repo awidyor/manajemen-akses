@@ -72,20 +72,21 @@ export const statsRouter = router({
         let currentMonthWeekly: number
 
         if (input.filterMonth) {
-          currentMonthWeekly = Number(input.filterMonth) ? Number(input.filterMonth) : new Date().getMonth()
+          currentMonthWeekly = input.filterMonth ? Number(input.filterMonth) : new Date().getMonth()
         } else {
           currentMonthWeekly = new Date().getMonth()
         }
-        const currentMonthWeeklyName = input.filterMonth !== undefined ? new Date(currentYear, currentMonthWeekly).toLocaleString('default', { month: 'long' }) : new Date().toLocaleString('default', { month: 'long' })
+        const currentMonthWeeklyName = input.filterMonth ? new Date(currentYear, currentMonthWeekly).toLocaleString('default', { month: 'long' }) : new Date().toLocaleString('default', { month: 'long' })
 
         let currentYearWeekly: number
 
         if (input.filterYear) {
-          currentYearWeekly = Number(input.filterYear) ? Number(input.filterYear) : currentYear
+          currentYearWeekly = input.filterYear ? Number(input.filterYear) : currentYear
         } else {
           currentYearWeekly = new Date().getFullYear()
         }
-        let listYear = [...new Set(data.flatMap(item => [new Date(item.waktuMasuk).getFullYear(), item.waktuKeluar ? new Date(item.waktuKeluar).getFullYear() : null]))]
+        const fullData = await ctx.prisma.akses.findMany()
+        let listYear = [...new Set(fullData.flatMap(item => [new Date(item.waktuMasuk).getFullYear(), item.waktuKeluar ? new Date(item.waktuKeluar).getFullYear() : null]))]
         // delete null
         listYear = listYear.filter(item => item)
 
