@@ -49,7 +49,7 @@ export const columns: ColumnDef<Jabatan>[] = [
   },
   {
     accessorKey: "metodeKeluar",
-    header: "Metode Masuk",
+    header: "Metode Keluar",
     cell: (row) => (!row.getValue() ? "-" : row.getValue()),
   },
   {
