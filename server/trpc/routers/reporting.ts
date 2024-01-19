@@ -70,15 +70,36 @@ export const reportingRouter = router({
       z.object({
         userId: z.string(),
         tempatMasuk: z.string(),
-        tempatKeluar: z.string().optional(),
         metodeMasuk: z.enum(['fingerPrintId', 'TapCard', 'faceId']),
-        metodeKeluar: z.enum(['fingerPrintId', 'TapCard', 'faceId']).optional(),
-        waktuMasuk: z.string(),
-        waktuKeluar: z.string().optional()
+        waktuMasuk: z.string()
       })
     )
     .mutation(async ({ input, ctx }) => {
       try {
+        const user = await ctx.prisma.user.findUnique({
+          where: {
+            id: input.userId
+          }
+        })
+
+        if (!user) {
+          throw new Error('User not found')
+        }
+
+        if (input.metodeMasuk === 'fingerPrintId' && !user.fingerPrintId) {
+          return {
+            error: 'User tidak memiliki fingerPrintId'
+          }
+        } else if (input.metodeMasuk === 'TapCard' && !user.tapCardId) {
+          return {
+            error: 'User tidak memiliki tapCardId'
+          }
+        } else if (input.metodeMasuk === 'faceId' && !user.faceId) {
+          return {
+            error: 'User tidak memiliki faceId'
+          }
+        }
+
         const akses = await ctx.prisma.akses.create({
           data: {
             user: {
@@ -87,11 +108,8 @@ export const reportingRouter = router({
               }
             },
             tempatMasuk: input.tempatMasuk,
-            tempatKeluar: input.tempatKeluar,
             metodeMasuk: input.metodeMasuk,
-            metodeKeluar: input.metodeKeluar,
-            waktuMasuk: input.waktuMasuk,
-            waktuKeluar: input.waktuKeluar
+            waktuMasuk: input.waktuMasuk
           }
         })
 
@@ -107,16 +125,37 @@ export const reportingRouter = router({
       z.object({
         id: z.string(),
         userId: z.string(),
-        tempatMasuk: z.string().optional(),
         tempatKeluar: z.string(),
-        metodeMasuk: z.enum(['fingerPrintId', 'TapCard', 'faceId']).optional(),
         metodeKeluar: z.enum(['fingerPrintId', 'TapCard', 'faceId']),
-        waktuMasuk: z.string().optional(),
         waktuKeluar: z.string()
       })
     )
     .mutation(async ({ input, ctx }) => {
       try {
+        const user = await ctx.prisma.user.findUnique({
+          where: {
+            id: input.userId
+          }
+        })
+
+        if (!user) {
+          throw new Error('User not found')
+        }
+
+        if (input.metodeKeluar === 'fingerPrintId' && !user.fingerPrintId) {
+          return {
+            error: 'User tidak memiliki fingerPrintId'
+          }
+        } else if (input.metodeKeluar === 'TapCard' && !user.tapCardId) {
+          return {
+            error: 'User tidak memiliki tapCardId'
+          }
+        } else if (input.metodeKeluar === 'faceId' && !user.faceId) {
+          return {
+            error: 'User tidak memiliki faceId'
+          }
+        }
+
         const akses = await ctx.prisma.akses.update({
           where: {
             id: input.id
@@ -127,11 +166,8 @@ export const reportingRouter = router({
                 id: input.userId
               }
             },
-            tempatMasuk: input.tempatMasuk,
             tempatKeluar: input.tempatKeluar,
-            metodeMasuk: input.metodeMasuk,
             metodeKeluar: input.metodeKeluar,
-            waktuMasuk: input.waktuMasuk,
             waktuKeluar: input.waktuKeluar
           }
         })
